@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="mb-4">Mis Apuntes a Asesorías</h1>
+    {% if apuntes %}
+        <div class="row">
+            {% for asesoria in apuntes %}
+                <div class="col-md-6 mb-4">
+                    <div class="card bg-dark text-white h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ asesoria.titulo }}</h5>
+                            <p class="card-text">{{ asesoria.descripcion }}</p>
+                            <p class="card-text"><small class="text-muted">Día: {{ asesoria.dia }} - Hora: {{ asesoria.hora }}</small></p>
+                            <p class="card-text"><small class="text-muted">Creado por: {{ asesoria.creador }}</small></p>
+                            <a href="{{ url_for('asesoria_detalle', asesoria_id=asesoria.id) }}" class="btn btn-primary mt-2">Ver Detalles</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="lead">No te has apuntado a ninguna asesoría todavía.</p>
+    {% endif %}
+{% endblock %}

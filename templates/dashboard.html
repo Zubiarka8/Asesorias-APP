@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="mb-4">Dashboard</h1>
+    <p class="lead">Bienvenido, {{ username }}. ¿Qué quieres hacer hoy?</p>
+    
+    <div class="mt-4">
+        <a href="{{ url_for('create_asesoria') }}" class="btn btn-lg btn-primary me-2">Crear nueva asesoría</a>
+        <a href="{{ url_for('my_asesorias') }}" class="btn btn-lg btn-outline-light">Ver mis asesorías</a>
+    </div>
+{% endblock %}

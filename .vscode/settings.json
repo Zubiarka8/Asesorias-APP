@@ -1,0 +1,14 @@
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/DJANGO-ENV": true,
+        "**/__pycache__": true,
+        "**/*.pyc": true,
+        "db.sqlite3": true
+    },
+    "hide-files.files": []
+}

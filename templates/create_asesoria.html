@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="mb-4">Crear nueva asesoría</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        
+        <div class="mb-3">
+            {{ form.titulo.label(class="form-label") }}
+            {{ form.titulo(class="form-control") }}
+        </div>
+        
+        <div class="mb-3">
+            {{ form.descripcion.label(class="form-label") }}
+            {{ form.descripcion(class="form-control", rows="5") }}
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form.dia.label(class="form-label") }}
+                {{ form.dia(class="form-select") }}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form.hora.label(class="form-label") }}
+                {{ form.hora(class="form-select") }}
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+{% endblock %}

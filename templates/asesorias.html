@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="mb-4">Asesorías Disponibles</h1>
+    {% if asesorias %}
+        <div class="row">
+            {% for asesoria in asesorias %}
+                <div class="col-md-6 mb-4">
+                    <div class="card bg-dark text-white h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ asesoria.titulo }}</h5>
+                            <p class="card-text">{{ asesoria.descripcion }}</p>
+                            <p class="card-text"><small class="text-muted">Fecha: {{ asesoria.fecha }} - Hora: {{ asesoria.hora }}</small></p>
+                            <a href="{{ url_for('asesoria_detalle', asesoria_id=asesoria.id) }}" class="btn btn-primary mt-2">Ver Detalles</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="lead">No hay asesorías disponibles en este momento.</p>
+    {% endif %}
+{% endblock %}

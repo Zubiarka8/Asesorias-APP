@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row text-center mt-5">
+        <div class="col-lg-8 offset-lg-2">
+            <h1 class="display-4 fw-bold">Bienvenido a Asesorías-APP</h1>
+            <p class="lead text-muted mt-3">
+                Tu plataforma para gestionar y solicitar asesorías de manera eficiente.
+                Regístrate para comenzar a organizar tus proyectos y conectar con expertos.
+            </p>
+        </div>
+    </div>
+
+    <div class="row text-center mt-4">
+        <div class="col-12">
+            {% if session.get('username') %}
+                <a href="{{ url_for('dashboard') }}" class="btn btn-lg btn-primary me-2">Ir al Dashboard</a>
+            {% else %}
+                <a href="{{ url_for('register') }}" class="btn btn-lg btn-primary me-2">Crear una cuenta</a>
+                <a href="{{ url_for('login') }}" class="btn btn-lg btn-outline-light">Iniciar sesión</a>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

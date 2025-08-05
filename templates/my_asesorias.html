@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="mb-4">Mis Asesorías</h1>
+    {% if asesorias %}
+        {% for asesoria in asesorias %}
+        <div class="card bg-dark text-white mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ asesoria.titulo }}</h5>
+                <p class="card-text">{{ asesoria.descripcion }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="lead">Aún no has creado ninguna asesoría.</p>
+        <a href="{{ url_for('create_asesoria') }}" class="btn btn-primary mt-3">Crear mi primera asesoría</a>
+    {% endif %}
+{% endblock %}
