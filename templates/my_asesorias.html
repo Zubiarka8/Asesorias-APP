@@ -7,12 +7,21 @@
         <div class="card mb-3">
             <div class="card-body">
                 <div class="asesor-autor">
-                    <i class="bi bi-person-circle-fill me-2" style="font-size: 1.5rem; color: #5f0a87;"></i>
+                    <i class="bi bi-person-circle-fill me-2 user-icon"></i>
                     {{ session['username'] }}
                 </div>
                 <h5 class="card-title">{{ asesoria.titulo }}</h5>
                 <p class="card-text">{{ asesoria.descripcion }}</p>
                 <p class="card-text"><small class="text-muted">Día: {{ asesoria.dia }} - Hora: {{ asesoria.hora }}</small></p>
+                <div class="mt-3">
+                    <a href="{{ url_for('asesoria_detalle', asesoria_id=asesoria.id) }}" class="btn btn-primary me-2">
+                        <i class="bi bi-eye me-1"></i>Ver Detalles
+                    </a>
+                    <a href="{{ url_for('cancelar_asesoria', asesoria_id=asesoria.id) }}" class="btn btn-danger" 
+                       onclick="return confirm('¿Estás seguro de que quieres cancelar esta asesoría? Esta acción no se puede deshacer.')">
+                        <i class="bi bi-trash me-1"></i>Cancelar Asesoría
+                    </a>
+                </div>
             </div>
         </div>
         {% endfor %}

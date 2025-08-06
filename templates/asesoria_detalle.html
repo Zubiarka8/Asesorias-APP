@@ -5,7 +5,7 @@
     <div class="card">
         <div class="card-body">
             <div class="asesor-autor">
-                <i class="bi bi-person-circle-fill me-2" style="font-size: 1.5rem; color: #5f0a87;"></i>
+                <i class="bi bi-person-circle-fill me-2 user-icon"></i>
                 {{ creador }}
             </div>
             <h3 class="card-title">{{ asesoria.titulo }}</h3>
@@ -33,6 +33,13 @@
                 {% else %}
                     <p>Todavía no hay usuarios apuntados a tu asesoría.</p>
                 {% endif %}
+
+                <div class="mt-4">
+                    <a href="{{ url_for('cancelar_asesoria', asesoria_id=asesoria.id) }}" class="btn btn-danger" 
+                       onclick="return confirm('¿Estás seguro de que quieres cancelar esta asesoría? Esta acción no se puede deshacer y eliminará todos los registros de asistentes.')">
+                        <i class="bi bi-trash me-1"></i>Cancelar Asesoría
+                    </a>
+                </div>
 
             {% else %}
                 {% if fecha_hora_asesoria > now %}

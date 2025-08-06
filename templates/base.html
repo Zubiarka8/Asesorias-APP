@@ -78,15 +78,6 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Actualizar el año actual en el footer
-        document.addEventListener('DOMContentLoaded', function() {
-            const currentYearElement = document.getElementById('currentYear');
-            if (currentYearElement) {
-                const currentYear = new Date().getFullYear();
-                currentYearElement.textContent = currentYear;
-            }
-        });
-    </script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

@@ -308,6 +308,37 @@ def cancelar(asesoria_id):
     return redirect(url_for('asesoria_detalle', asesoria_id=asesoria_id))
 
 
+@app.route('/cancelar_asesoria/<int:asesoria_id>')
+def cancelar_asesoria(asesoria_id):
+    """Cancela una asesoría propia (elimina la asesoría completa)."""
+    if 'user_id' not in session:
+        flash('Debes iniciar sesión para cancelar tu asesoría.', 'danger')
+        return redirect(url_for('login'))
+    
+    conn = get_db_connection()
+    asesoria = conn.execute("SELECT * FROM asesorias WHERE id = ?", (asesoria_id,)).fetchone()
+    
+    if asesoria is None:
+        conn.close()
+        flash('Asesoría no encontrada.', 'danger')
+        return redirect(url_for('my_asesorias'))
+    
+    if asesoria['user_id'] != session['user_id']:
+        conn.close()
+        flash('No puedes cancelar una asesoría que no has creado.', 'danger')
+        return redirect(url_for('my_asesorias'))
+    
+    # Eliminar primero los registros de asistentes
+    conn.execute("DELETE FROM registros_asesorias WHERE asesoria_id = ?", (asesoria_id,))
+    # Luego eliminar la asesoría
+    conn.execute("DELETE FROM asesorias WHERE id = ?", (asesoria_id,))
+    conn.commit()
+    conn.close()
+    
+    flash('Has cancelado tu asesoría correctamente.', 'success')
+    return redirect(url_for('my_asesorias'))
+
+
 @app.route('/my_asesorias')
 def my_asesorias():
     if 'user_id' not in session:

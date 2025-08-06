@@ -4,7 +4,7 @@
     <h1 class="mb-4">Crear nueva asesoría</h1>
     
     <!-- Alert para días no permitidos -->
-    <div class="alert alert-warning alert-dismissible fade show" role="alert" id="dateAlert" style="display: none;">
+    <div class="alert alert-warning alert-dismissible fade show" role="alert" id="dateAlert">
         <i class="bi bi-exclamation-triangle me-2"></i>
         <strong>¡Atención!</strong> No puedes crear una asesoría para hoy o días anteriores. Debes crear la asesoría al menos un día después.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -58,35 +58,4 @@
             {{ form.submit(class="btn btn-primary") }}
         </div>
     </form>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const diaField = document.getElementById('diaField');
-            const dateAlert = document.getElementById('dateAlert');
-            
-            function checkDate() {
-                const selectedDate = new Date(diaField.value);
-                const today = new Date();
-                const tomorrow = new Date(today);
-                tomorrow.setDate(tomorrow.getDate() + 1);
-                tomorrow.setHours(0, 0, 0, 0);
-                
-                if (selectedDate < tomorrow) {
-                    dateAlert.style.display = 'block';
-                    diaField.classList.add('is-invalid');
-                } else {
-                    dateAlert.style.display = 'none';
-                    diaField.classList.remove('is-invalid');
-                }
-            }
-            
-            if (diaField) {
-                diaField.addEventListener('change', checkDate);
-                // Verificar al cargar la página si ya hay un valor
-                if (diaField.value) {
-                    checkDate();
-                }
-            }
-        });
-    </script>
 {% endblock %}

@@ -208,8 +208,30 @@ footer {
     box-shadow: 0 2px 8px #e0aaff33;
     letter-spacing: 0.5px;
 }
+
 .asesor-autor svg {
     margin-right: 0.5rem;
     vertical-align: middle;
     font-size: 1.5rem;
+}
+
+/* Estilos para alertas de fecha */
+#dateAlert {
+    display: none;
+}
+
+.is-invalid {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25) !important;
+}
+
+/* Iconos de usuario */
+.user-icon {
+    font-size: 1.5rem;
+    color: #5f0a87;
+}
+
+.user-icon-large {
+    font-size: 2rem;
+    color: #5f0a87;
 }
