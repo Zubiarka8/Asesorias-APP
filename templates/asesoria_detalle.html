@@ -1,23 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1 class="mb-4">{{ asesoria.titulo }}</h1>
-    <div class="card bg-dark text-white">
+    <h1 class="mb-4">Detalles de la Asesoría</h1>
+    <div class="card">
         <div class="card-body">
+            <div class="asesor-autor">
+                <i class="bi bi-person-circle-fill me-2" style="font-size: 1.5rem; color: #5f0a87;"></i>
+                {{ creador }}
+            </div>
+            <h3 class="card-title">{{ asesoria.titulo }}</h3>
             <h5 class="card-title">{{ asesoria.descripcion }}</h5>
-            
-            {# Mostramos la fecha y hora formateadas #}
             <p class="card-text">
                 <small class="text-muted">
-                    Fecha: {{ asesoria.fecha_hora.strftime('%d/%m/%Y') }} - Hora: {{ asesoria.fecha_hora.strftime('%H:%M') }} hs
+                    Fecha: {{ asesoria.dia }} - Hora: {{ asesoria.hora }} hs
                 </small>
             </p>
-            <p class="card-text"><small class="text-muted">Creado por: {{ creador }}</small></p>
             <hr>
 
             {% if es_creador %}
                 <p>Eres el creador de esta asesoría.</p>
-                {% if asesoria.fecha_hora < now %}
+                {% if fecha_hora_asesoria < now %}
                     <p class="text-warning">Esta asesoría ya ha finalizado.</p>
                 {% endif %}
 
@@ -33,8 +35,7 @@
                 {% endif %}
 
             {% else %}
-                {# Solo mostramos los botones si la asesoría es en el futuro #}
-                {% if asesoria.fecha_hora > now %}
+                {% if fecha_hora_asesoria > now %}
                     {% if esta_registrado %}
                         <p>Ya estás apuntado a esta asesoría.</p>
                         <a href="{{ url_for('cancelar', asesoria_id=asesoria.id) }}" class="btn btn-danger mt-3">Cancelar Apunte</a>
@@ -42,7 +43,6 @@
                         <a href="{{ url_for('apuntarse', asesoria_id=asesoria.id) }}" class="btn btn-primary mt-3">Apuntarse</a>
                     {% endif %}
                 {% else %}
-                    {# Si la asesoría ya pasó, informamos al usuario #}
                     <p class="text-warning">El periodo para apuntarse a esta asesoría ha finalizado.</p>
                 {% endif %}
             {% endif %}

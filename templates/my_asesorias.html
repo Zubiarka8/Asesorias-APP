@@ -4,10 +4,15 @@
     <h1 class="mb-4">Mis Asesorías</h1>
     {% if asesorias %}
         {% for asesoria in asesorias %}
-        <div class="card bg-dark text-white mb-3">
+        <div class="card mb-3">
             <div class="card-body">
+                <div class="asesor-autor">
+                    <i class="bi bi-person-circle-fill me-2" style="font-size: 1.5rem; color: #5f0a87;"></i>
+                    {{ session['username'] }}
+                </div>
                 <h5 class="card-title">{{ asesoria.titulo }}</h5>
                 <p class="card-text">{{ asesoria.descripcion }}</p>
+                <p class="card-text"><small class="text-muted">Día: {{ asesoria.dia }} - Hora: {{ asesoria.hora }}</small></p>
             </div>
         </div>
         {% endfor %}

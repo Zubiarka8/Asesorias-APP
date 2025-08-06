@@ -1,11 +1,79 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1 class="mb-4">Dashboard</h1>
-    <p class="lead">Bienvenido, {{ username }}. ¿Qué quieres hacer hoy?</p>
-    
-    <div class="mt-4">
-        <a href="{{ url_for('create_asesoria') }}" class="btn btn-lg btn-primary me-2">Crear nueva asesoría</a>
-        <a href="{{ url_for('my_asesorias') }}" class="btn btn-lg btn-outline-light">Ver mis asesorías</a>
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card">
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <div class="asesor-autor mb-3">
+                        <i class="bi bi-person-circle-fill me-2" style="font-size: 2rem; color: #5f0a87;"></i>
+                        {{ user.nombre }}
+                    </div>
+                    <h1 class="h3">Dashboard - Mi Perfil</h1>
+                    <p class="text-muted">Bienvenido a tu panel de control</p>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card bg-light border-0 mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title text-primary">
+                                    <i class="bi bi-person-badge me-2"></i>Información Personal
+                                </h5>
+                                <div class="row">
+                                    <div class="col-4 fw-bold">Nombre:</div>
+                                    <div class="col-8">{{ user.nombre }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4 fw-bold">Usuario:</div>
+                                    <div class="col-8">{{ user.username }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4 fw-bold">DNI:</div>
+                                    <div class="col-8">{{ user.dni }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card bg-light border-0 mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title text-primary">
+                                    <i class="bi bi-envelope me-2"></i>Información de Contacto
+                                </h5>
+                                <div class="row">
+                                    <div class="col-4 fw-bold">Email:</div>
+                                    <div class="col-8">{{ user.email }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4 fw-bold">ID Usuario:</div>
+                                    <div class="col-8">#{{ user.id }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <div class="text-center">
+                    <h5 class="mb-3">¿Qué quieres hacer hoy?</h5>
+                    <div class="d-grid gap-2 d-md-block">
+                        <a href="{{ url_for('create_asesoria') }}" class="btn btn-primary btn-lg me-md-2">
+                            <i class="bi bi-plus-circle me-2"></i>Crear nueva asesoría
+                        </a>
+                        <a href="{{ url_for('my_asesorias') }}" class="btn btn-outline-primary btn-lg me-md-2">
+                            <i class="bi bi-calendar-check me-2"></i>Ver mis asesorías
+                        </a>
+                        <a href="{{ url_for('my_apuntes') }}" class="btn btn-outline-primary btn-lg">
+                            <i class="bi bi-bookmark me-2"></i>Ver mis apuntes
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 {% endblock %}

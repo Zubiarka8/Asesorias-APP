@@ -1,8 +1,7 @@
 import sqlite3
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_wtf import FlaskForm
-from wtforms.fields.html5 import DateField 
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, SelectField, DateField
 from wtforms.validators import DataRequired, Email, Length, EqualTo, ValidationError
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, date
@@ -53,21 +52,23 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Iniciar Sesión')
 
 class AsesoriaForm(FlaskForm):
-    """Formulario para crear o editar una asesoría (MODIFICADO)."""
+    """Formulario para crear o editar una asesoría (AJUSTADO)."""
     titulo = StringField('Título de la Asesoría', validators=[DataRequired()])
     descripcion = TextAreaField('Descripción del problema', validators=[DataRequired()])
-    fecha = DateField('Fecha', format='%Y-%m-%d', validators=[DataRequired()])
+    dia = DateField('Día', format='%Y-%m-%d', validators=[DataRequired()])
     hora = SelectField('Hora', choices=[], validators=[DataRequired()])
     submit = SubmitField('Crear Asesoría')
-    
-    def validate_fecha(self, fecha):
-        if fecha.data < date.today():
-            raise ValidationError("La fecha no puede ser en el pasado.")
+
+    def validate_dia(self, dia):
+        from datetime import date, timedelta
+        tomorrow = date.today() + timedelta(days=1)
+        if dia.data < tomorrow:
+            raise ValidationError("No puedes crear una asesoría para hoy o días anteriores. Debes crear la asesoría al menos un día después.")
 
 
 @app.route('/create_asesoria', methods=['GET', 'POST'])
 def create_asesoria():
-    """Página para crear una nueva asesoría (MODIFICADA)."""
+    """Página para crear una nueva asesoría (AJUSTADO)."""
     if 'user_id' not in session:
         flash('Debes iniciar sesión para crear una asesoría.', 'danger')
         return redirect(url_for('login'))
@@ -82,36 +83,35 @@ def create_asesoria():
     form.hora.choices = horas
 
     if form.validate_on_submit():
-        fecha_str = form.fecha.data.strftime('%Y-%m-%d')
+        dia_str = form.dia.data.strftime('%Y-%m-%d')
         hora_str = form.hora.data
-        fecha_hora_str = f"{fecha_str} {hora_str}"
-        fecha_hora_asesoria = datetime.strptime(fecha_hora_str, '%Y-%m-%d %H:%M')
         
-        # Validamos que la fecha y hora completas sean futuras
-        if fecha_hora_asesoria < datetime.now():
-            flash('La hora seleccionada ya ha pasado. Por favor, elige una hora futura.', 'danger')
+        # Validar que la fecha y hora completas sean al menos un día después
+        from datetime import datetime, timedelta
+        fecha_hora_str = f"{dia_str} {hora_str}"
+        fecha_hora_asesoria = datetime.strptime(fecha_hora_str, '%Y-%m-%d %H:%M')
+        tomorrow = datetime.now() + timedelta(days=1)
+        
+        if fecha_hora_asesoria < tomorrow:
+            flash('No puedes crear una asesoría para hoy o días anteriores. Debes crear la asesoría al menos un día después.', 'danger')
             return render_template('create_asesoria.html', form=form)
-
+        
         user_id = session['user_id']
         titulo = form.titulo.data
         descripcion = form.descripcion.data
-        
         conn = get_db_connection()
-        # Guardamos el objeto datetime completo en la base de datos
-        conn.execute("INSERT INTO asesorias (user_id, titulo, descripcion, fecha_hora) VALUES (?, ?, ?, ?)",
-                     (user_id, titulo, descripcion, fecha_hora_asesoria))
+        conn.execute("INSERT INTO asesorias (user_id, titulo, descripcion, dia, hora) VALUES (?, ?, ?, ?, ?)",
+                     (user_id, titulo, descripcion, dia_str, hora_str))
         conn.commit()
         conn.close()
-        
         flash('Asesoría creada con éxito.', 'success')
         return redirect(url_for('my_asesorias'))
-    
     return render_template('create_asesoria.html', form=form)
 
 
 @app.route('/asesoria/<int:asesoria_id>')
 def asesoria_detalle(asesoria_id):
-    """Muestra los detalles de una asesoría específica (MODIFICADA)."""
+    """Muestra los detalles de una asesoría específica (AJUSTADO)."""
     if 'user_id' not in session:
         flash('Debes iniciar sesión para ver los detalles de una asesoría.', 'danger')
         return redirect(url_for('login'))
@@ -125,7 +125,7 @@ def asesoria_detalle(asesoria_id):
         return redirect(url_for('asesorias'))
 
     esta_registrado = conn.execute("SELECT * FROM registros_asesorias WHERE user_id = ? AND asesoria_id = ?",
-                                      (session['user_id'], asesoria_id)).fetchone()
+                                   (session['user_id'], asesoria_id)).fetchone()
     creador = conn.execute("SELECT username FROM usuarios WHERE id = ?", (asesoria['user_id'],)).fetchone()
     es_creador = (session['user_id'] == asesoria['user_id'])
     asistentes = None
@@ -133,20 +133,25 @@ def asesoria_detalle(asesoria_id):
         asistentes = conn.execute('''SELECT u.username FROM registros_asesorias r JOIN usuarios u ON r.user_id = u.id
                                      WHERE r.asesoria_id = ?''', (asesoria_id,)).fetchall()
     conn.close()
-    
-    # Pasamos la fecha y hora actual a la plantilla para poder comparar
+
+    # Convertir dia y hora a datetime para comparar
+    from datetime import datetime
+    fecha_hora_asesoria = datetime.strptime(f"{asesoria['dia']} {asesoria['hora']}", '%Y-%m-%d %H:%M')
+    now = datetime.now()
+
     return render_template('asesoria_detalle.html', 
                            asesoria=asesoria, 
                            esta_registrado=esta_registrado, 
                            creador=creador['username'],
                            es_creador=es_creador,
                            asistentes=asistentes,
-                           now=datetime.now())
+                           fecha_hora_asesoria=fecha_hora_asesoria,
+                           now=now)
 
 
 @app.route('/apuntar/<int:asesoria_id>')
 def apuntarse(asesoria_id):
-    """Registra al usuario actual en una asesoría (MODIFICADA)."""
+    """Registra al usuario actual en una asesoría (AJUSTADO)."""
     if 'user_id' not in session:
         flash('Debes iniciar sesión para apuntarte a una asesoría.', 'danger')
         return redirect(url_for('login'))
@@ -155,7 +160,11 @@ def apuntarse(asesoria_id):
     asesoria = conn.execute("SELECT * FROM asesorias WHERE id = ?", (asesoria_id,)).fetchone()
     
     # Comprobamos si la asesoría ya ha pasado
-    if asesoria['fecha_hora'] < datetime.now():
+    from datetime import datetime
+    fecha_hora_str = f"{asesoria['dia']} {asesoria['hora']}"
+    fecha_hora_asesoria = datetime.strptime(fecha_hora_str, '%Y-%m-%d %H:%M')
+    
+    if fecha_hora_asesoria < datetime.now():
         flash('No puedes apuntarte a una asesoría que ya ha pasado.', 'warning')
         conn.close()
         return redirect(url_for('asesoria_detalle', asesoria_id=asesoria_id))
@@ -246,7 +255,15 @@ def logout():
 @app.route('/dashboard')
 def dashboard():
     if 'username' in session:
-        return render_template('dashboard.html', username=session['username'])
+        conn = get_db_connection()
+        user = conn.execute("SELECT * FROM usuarios WHERE username = ?", (session['username'],)).fetchone()
+        conn.close()
+        
+        if user:
+            return render_template('dashboard.html', user=user)
+        else:
+            flash('Error al cargar los datos del usuario.', 'danger')
+            return redirect(url_for('login'))
     else:
         flash('Debes iniciar sesión para acceder a esta página.', 'danger')
         return redirect(url_for('login'))
@@ -254,16 +271,27 @@ def dashboard():
 
 @app.route('/asesorias')
 def asesorias():
+    from datetime import datetime
     conn = get_db_connection()
     asesorias_disponibles = conn.execute('''
-        SELECT a.id, a.titulo, a.descripcion, a.fecha_hora, u.username as creador
+        SELECT a.id, a.titulo, a.descripcion, a.dia, a.hora, u.username as creador
         FROM asesorias a
         JOIN usuarios u ON a.user_id = u.id
-        WHERE a.fecha_hora > ?
-        ORDER BY a.fecha_hora ASC
-    ''', (datetime.now(),)).fetchall()
+        ORDER BY a.dia ASC, a.hora ASC
+    ''').fetchall()
     conn.close()
-    return render_template('asesorias.html', asesorias=asesorias_disponibles)
+    # Filtrar en Python solo las asesorías futuras
+    asesorias_futuras = []
+    now = datetime.now()
+    for asesoria in asesorias_disponibles:
+        fecha_hora_str = f"{asesoria['dia']} {asesoria['hora']}"
+        try:
+            fecha_hora = datetime.strptime(fecha_hora_str, '%Y-%m-%d %H:%M')
+            if fecha_hora > now:
+                asesorias_futuras.append(asesoria)
+        except Exception:
+            continue
+    return render_template('asesorias.html', asesorias=asesorias_futuras)
 
 
 @app.route('/cancelar/<int:asesoria_id>')
@@ -286,7 +314,7 @@ def my_asesorias():
         flash('Debes iniciar sesión para ver tus asesorías.', 'danger')
         return redirect(url_for('login'))
     conn = get_db_connection()
-    asesorias = conn.execute("SELECT * FROM asesorias WHERE user_id = ? ORDER BY fecha_hora ASC", (session['user_id'],)).fetchall()
+    asesorias = conn.execute("SELECT * FROM asesorias WHERE user_id = ? ORDER BY dia ASC, hora ASC", (session['user_id'],)).fetchall()
     conn.close()
     return render_template('my_asesorias.html', asesorias=asesorias)
 
@@ -298,12 +326,12 @@ def my_apuntes():
         return redirect(url_for('login'))
     conn = get_db_connection()
     apuntes = conn.execute('''
-        SELECT a.id, a.titulo, a.descripcion, a.fecha_hora, u.username as creador
+        SELECT a.id, a.titulo, a.descripcion, a.dia, a.hora, u.username as creador
         FROM registros_asesorias r
         JOIN asesorias a ON r.asesoria_id = a.id
         JOIN usuarios u ON a.user_id = u.id
         WHERE r.user_id = ?
-        ORDER BY a.fecha_hora ASC
+        ORDER BY a.dia ASC, a.hora ASC
     ''', (session['user_id'],)).fetchall()
     conn.close()
     return render_template('my_apuntes.html', apuntes=apuntes)

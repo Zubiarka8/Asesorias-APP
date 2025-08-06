@@ -2,27 +2,55 @@
 
 {% block content %}
     <h1 class="mb-4">Crear nueva asesoría</h1>
+    
+    <!-- Alert para días no permitidos -->
+    <div class="alert alert-warning alert-dismissible fade show" role="alert" id="dateAlert" style="display: none;">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        <strong>¡Atención!</strong> No puedes crear una asesoría para hoy o días anteriores. Debes crear la asesoría al menos un día después.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
     <form method="POST">
         {{ form.hidden_tag() }}
         
         <div class="mb-3">
             {{ form.titulo.label(class="form-label") }}
             {{ form.titulo(class="form-control") }}
+            {% if form.titulo.errors %}
+                {% for error in form.titulo.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
         </div>
         
         <div class="mb-3">
             {{ form.descripcion.label(class="form-label") }}
             {{ form.descripcion(class="form-control", rows="5") }}
+            {% if form.descripcion.errors %}
+                {% for error in form.descripcion.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
         </div>
 
         <div class="row">
             <div class="col-md-6 mb-3">
                 {{ form.dia.label(class="form-label") }}
-                {{ form.dia(class="form-select") }}
+                {{ form.dia(class="form-select", id="diaField") }}
+                {% if form.dia.errors %}
+                    {% for error in form.dia.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
             </div>
             <div class="col-md-6 mb-3">
                 {{ form.hora.label(class="form-label") }}
                 {{ form.hora(class="form-select") }}
+                {% if form.hora.errors %}
+                    {% for error in form.hora.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
             </div>
         </div>
         
@@ -30,4 +58,35 @@
             {{ form.submit(class="btn btn-primary") }}
         </div>
     </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const diaField = document.getElementById('diaField');
+            const dateAlert = document.getElementById('dateAlert');
+            
+            function checkDate() {
+                const selectedDate = new Date(diaField.value);
+                const today = new Date();
+                const tomorrow = new Date(today);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                tomorrow.setHours(0, 0, 0, 0);
+                
+                if (selectedDate < tomorrow) {
+                    dateAlert.style.display = 'block';
+                    diaField.classList.add('is-invalid');
+                } else {
+                    dateAlert.style.display = 'none';
+                    diaField.classList.remove('is-invalid');
+                }
+            }
+            
+            if (diaField) {
+                diaField.addEventListener('change', checkDate);
+                // Verificar al cargar la página si ya hay un valor
+                if (diaField.value) {
+                    checkDate();
+                }
+            }
+        });
+    </script>
 {% endblock %}

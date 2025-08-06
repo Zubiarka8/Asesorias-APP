@@ -1,74 +1,215 @@
-/* Cambia el fondo del cuerpo y el color del texto principal */
+/* Fondo general con gradiente vibrante */
 body {
-    background-color: #212529; /* Gris oscuro */
-    color: #f8f9fa; /* Gris claro */
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: #22223b;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Estilo para el contenedor principal */
+/* Contenedor principal */
 .container {
-    max-width: 800px;
+    max-width: 1200px;
 }
 
-/* Cambia la barra de navegación */
+/* Navbar mejorado */
 .navbar {
-    background-color: #343a40 !important; /* Un tono más oscuro */
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-.navbar-brand, .nav-link {
-    color: #f8f9fa !important;
-}
-.navbar-brand:hover, .nav-link:hover {
-    color: #e9ecef !important;
+    background: rgba(58, 12, 163, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid #9d4edd;
 }
 
-/* Estilo para los títulos */
-h1, h2, h3, h4, h5, h6 {
-    color: #ffffff;
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #fff !important;
+    letter-spacing: 1px;
 }
 
-/* Cambia los botones primarios */
+.nav-link {
+    color: #e0aaff !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #fff !important;
+    text-shadow: 0 2px 8px #9d4edd;
+    transform: translateY(-2px);
+}
+
+/* Tarjetas glassmorphism y coloridas */
+.card {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid #bdb2ff;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(157, 78, 221, 0.12);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 0 12px 40px rgba(157, 78, 221, 0.18);
+}
+
+.card-body {
+    padding: 1.7rem;
+}
+
+/* Botones vivos y modernos */
+.btn {
+    border-radius: 12px;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
 .btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
+    background: linear-gradient(90deg, #5f0a87 0%, #a4508b 100%);
+    border: none;
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(164, 80, 139, 0.18);
 }
+
 .btn-primary:hover {
-    background-color: #0056b3;
-    border-color: #004085;
+    background: linear-gradient(90deg, #a4508b 0%, #5f0a87 100%);
+    color: #fff;
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 6px 20px rgba(164, 80, 139, 0.25);
 }
 
-/* Estilos para los formularios */
+.btn-outline-light {
+    border: 2px solid #9d4edd;
+    color: #5f0a87;
+    background: transparent;
+}
+
+.btn-outline-light:hover {
+    background: #9d4edd;
+    color: #fff;
+    border-color: #5f0a87;
+    transform: translateY(-2px);
+}
+
+/* Formularios glassmorphism */
+.form-control, .form-select {
+    background: rgba(245, 247, 250, 0.7);
+    border: 1px solid #bdb2ff;
+    border-radius: 10px;
+    color: #22223b;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    background: #fff;
+    border-color: #9d4edd;
+    box-shadow: 0 0 0 0.25rem rgba(157, 78, 221, 0.15);
+    color: #22223b;
+}
+
 .form-label {
-    color: #adb5bd;
-}
-.form-control {
-    background-color: #343a40;
-    border-color: #495057;
-    color: #f8f9fa;
-}
-.form-control:focus {
-    background-color: #343a40;
-    border-color: #80bdff;
-    color: #f8f9fa;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    color: #5f0a87;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
 }
 
-/* Estilos para los enlaces */
-a {
-    color: #adb5bd;
-}
-a:hover {
-    color: #e9ecef;
+/* Alertas coloridas y claras */
+.alert {
+    border-radius: 10px;
+    border: none;
+    backdrop-filter: blur(10px);
 }
 
-/* Estilos para los alerts */
+.alert-success {
+    background: #b7e4c7;
+    color: #22223b;
+}
+
 .alert-danger {
-    color: #f8d7da;
-    background-color: #721c24;
-    border-color: #f5c6cb;
+    background: #ffb4a2;
+    color: #22223b;
 }
+
 .alert-info {
-    color: #d6d8d9;
-    background-color: #0c5460;
-    border-color: #c6e3ec;
+    background: #bdb2ff;
+    color: #22223b;
+}
+
+.alert-warning {
+    background: #ffe066;
+    color: #22223b;
+}
+
+/* Títulos destacados */
+h1, h2, h3, h4, h5, h6 {
+    color: #5f0a87;
+    font-weight: 700;
+    text-shadow: 0 2px 8px #e0aaff33;
+}
+
+/* Enlaces mejorados */
+a {
+    color: #5f0a87;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: #a4508b;
+    text-decoration: underline;
+}
+
+/* Footer mejorado */
+footer {
+    background: rgba(58, 12, 163, 0.95);
+    color: #e0aaff;
+    border-top: 2px solid #9d4edd;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1rem;
+    }
+    .card {
+        margin-bottom: 1rem;
+    }
+    .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Animaciones suaves */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.asesor-autor {
+    display: inline-block;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #5f0a87;
+    background: linear-gradient(90deg,#e0aaff,#9d4edd);
+    border-radius: 12px;
+    padding: 0.4rem 1.2rem 0.4rem 0.8rem;
+    margin-bottom: 0.7rem;
+    box-shadow: 0 2px 8px #e0aaff33;
+    letter-spacing: 0.5px;
+}
+.asesor-autor svg {
+    margin-right: 0.5rem;
+    vertical-align: middle;
+    font-size: 1.5rem;
 }
